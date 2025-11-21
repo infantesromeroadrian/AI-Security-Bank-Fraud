@@ -1,0 +1,88 @@
+# Bank Anti-Fraud Configuration
+
+# Data Configuration
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  splits_dir: "data/splits"
+  min_samples: 1000
+  
+# Airtable Configuration
+airtable:
+  base_id: "appUhzE6xLRbVVLuE"
+  table_name: "FraudBank"
+  page_size: 100
+
+# Feature Engineering
+features:
+  amount_bins: [0, 50, 200, 1000, 999999]
+  distance_thresholds:
+    far_from_home: 100
+    far_from_last: 50
+  velocity_thresholds:
+    high_frequency_24h: 5
+    high_frequency_7d: 20
+
+# Data Splitting
+split:
+  test_size: 0.2
+  val_size: 0.2
+  random_state: 42
+  stratify: true
+
+# SMOTE Configuration
+smote:
+  sampling_strategy: 0.3
+  random_state: 42
+
+# Model Training
+models:
+  logistic_regression:
+    class_weight: "balanced"
+    max_iter: 1000
+  
+  random_forest:
+    n_estimators: 100
+    max_depth: 10
+    class_weight: "balanced"
+    n_jobs: -1
+  
+  xgboost:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+  
+  lightgbm:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+
+# MLflow Configuration
+mlflow:
+  tracking_uri: "./mlruns"
+  experiment_name: "fraud_detection"
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  workers: 1
+
+# Monitoring
+monitoring:
+  drift_threshold: 0.05
+  performance_thresholds:
+    min_precision: 0.2
+    min_recall: 0.7
+    min_f1: 0.3
+  alert_channels:
+    - console
+    - file
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_encoding: "utf-8"
+
